@@ -4,12 +4,16 @@
 swaync &
 
 # Start waybar
-waybar &
+# waybar &
+
+# Start tray applets
+nm-applet --indicator &
+blueman-applet &
 
 # Start clipboard manager
 wl-paste --type text --watch cliphist store &
 wl-paste --type image --watch cliphist store &
-~/.config/hypr/scripts/clipboard_sync.sh &
+# ~/.config/hypr/scripts/clipboard_sync.sh & # This might be conflicting or unnecessary if using cliphist
 
 # Start wallpaper daemon
 swww-daemon &

@@ -16,10 +16,10 @@ static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will
 static const int smartgaps                 = 0;  /* 1 means no outer gap when there is only one window */
 static const int monoclegaps               = 0;  /* 1 means outer gaps in monocle layout */
 static const unsigned int borderpx         = 2;  /* border pixel of windows */
-static const unsigned int gappih           = 0; /* horiz inner gap between windows */
-static const unsigned int gappiv           = 0; /* vert inner gap between windows */
-static const unsigned int gappoh           = 10; /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov           = 10; /* vert outer gap between windows and screen edge */
+static const unsigned int gappih           = 10; /* horiz inner gap between windows */
+static const unsigned int gappiv           = 10; /* vert inner gap between windows */
+static const unsigned int gappoh           = 12; /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov           = 12; /* vert outer gap between windows and screen edge */
 static const float rootcolor[]             = COLOR(0x24273aff);
 static const float bordercolor[]           = COLOR(0x24273aff);
 static const float focuscolor[]            = COLOR(0x8aadf4ff);
@@ -41,10 +41,14 @@ static const Rule rules[] = {
         /* app_id  title  tags mask  isfloating  alpha unfocus  monitor x y w h*/
         /* examples: */
         { "EXAMPLE",  NULL,       0,       1,      default_opacity_unfocus, -1, -1, -1, -1.0f, -1.0f }, 
-        { "kitty",     NULL,       0,       0,      0.69f,    -1, -1, -1, -1.0f, -1.0f },
+        { "kitty",     NULL,       0,       1,      0.69f,    -1, -1, -1, 1090.0f, 850.0f },
         { "Emacs",     NULL,       0,       0,      0.88f,    -1, -1, -1, -1.0f, -1.0f },
         { "nautilus",  NULL,       0,       1,      0.88f,    -1, -1, -1, 1500.0f, 900.0f },
         { "pavucontrol", NULL,     0,       1,      0.88f,    -1, -1, -1, 1020.0f, 700.0f },
+        { "peaclock",  NULL,       0,       1,      0.88f,    -1, 100, 100, 100.0f, 200.0f },
+        { "cg-timer",  NULL,       0,       1,      0.69f,    -1, 900, 10, 1000.0f, 250.0f },
+        { "org.gnome.Loupe", NULL, 0,       1,      1.0f,     -1, -1, -1, 1090.0f, 850.0f },
+        { "xdg-desktop-portal-gtk", NULL, 0, 1,    0.88f,    -1, -1, -1, 1020.0f, 700.0f },
         { "kitty",    "fzf",       0,      1,      1.0f,      -1, 310, 200, 1300.0f, 0.4f },
         { "kitty",    "menu",      0,      1,      1.0f,      -1, 710, 300, 500.0f, 0.35f },
 };
@@ -151,31 +155,50 @@ static const Key keys[] = {
         { MODKEY,                    XKB_KEY_Return,     spawn,          {.v = term} },
         { MODKEY,                    XKB_KEY_q,          killclient,     {0} },
         { MODKEY,                    XKB_KEY_d,          spawn,          SHCMD("rofi -show drun -config ~/.config/rofi/drun.rasi") },
+        { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_A,          spawn,          SHCMD("tofi-drun -c ~/.config/tofi/configA --drun-launch=true") },
         { MODKEY,                    XKB_KEY_e,          spawn,          SHCMD("nautilus") },
         { MODKEY,                    XKB_KEY_c,          spawn,          SHCMD("emacs") },
-        { MODKEY,                    XKB_KEY_b,          spawn,          {.v = browser} },
-        { MODKEY,                    XKB_KEY_v,          spawn,          SHCMD("cliphist list | rofi -dmenu | cliphist decode | wl-copy") },
+        { MODKEY,                    XKB_KEY_b,          spawn,          SHCMD("google-chrome-stable") },
+        { WLR_MODIFIER_ALT,          XKB_KEY_b,          spawn,          SHCMD("brave") },
+        { WLR_MODIFIER_ALT,          XKB_KEY_e,          spawn,          SHCMD("emacs") },
+        { WLR_MODIFIER_ALT,          XKB_KEY_t,          spawn,          SHCMD("twitter") },
+        { WLR_MODIFIER_ALT,          XKB_KEY_y,          spawn,          SHCMD("youtube") },
+        { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_V,          spawn,          SHCMD("vesktop-wayland") },
+        { MODKEY,                    XKB_KEY_v,          spawn,          SHCMD("cliphist list | tofi -c ~/.config/tofi/configV | cliphist decode | wl-copy") },
         { MODKEY,                    XKB_KEY_f,          togglefullscreen, {0} },
         { MODKEY,                    XKB_KEY_space,      togglefloating, {0} },
-        { MODKEY,                    XKB_KEY_n,          spawn,          SHCMD("swaync-client -t -sw") },
+        { MODKEY,                    XKB_KEY_n,          spawn,          SHCMD("~/.config/waybar/scripts/notification_center.sh") },
         { MODKEY,                    XKB_KEY_l,          spawn,          SHCMD("hyprlock") },
         { MODKEY,                    XKB_KEY_Escape,     spawn,          SHCMD("wlogout") },
         { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_M,          quit,           {0} },
+        { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_X,          quit,           {0} },
+        { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_R,          spawn,          SHCMD("systemctl reboot") },
+        { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_P,          spawn,          SHCMD("systemctl poweroff") },
+        { MODKEY,                    XKB_KEY_w,          spawn,          SHCMD("~/.config/hypr/scripts/wallpaper_select.sh") },
+        { MODKEY,                    XKB_KEY_Print,      spawn,          SHCMD("hyprshot -m window -o ~/Pictures/screenshots -f $(date +%Y-%m-%d_%H-%M-%S).png") },
+        { 0,                         XKB_KEY_Print,      spawn,          SHCMD("flameshot gui") },
+        { WLR_MODIFIER_SHIFT,        XKB_KEY_Print,      spawn,          SHCMD("hyprshot -m region -o ~/Pictures/screenshots -f $(date +%Y-%m-%d_%H-%M-%S).png") },
+        { WLR_MODIFIER_CTRL,         XKB_KEY_Escape,     spawn,          SHCMD("killall waybar || waybar") },
+        { MODKEY,                    XKB_KEY_t,          spawn,          SHCMD("cg-timer") },
+        { MODKEY,                    XKB_KEY_z,          spawn,          SHCMD("boomer") },
+        { MODKEY,                    XKB_KEY_a,          spawn,          SHCMD("pavucontrol") },
+        { WLR_MODIFIER_ALT,          XKB_KEY_c,          spawn,          SHCMD("kitty peaclock") },
 
         /* navigation */
         { MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
         { MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
         { MODKEY,                    XKB_KEY_Left,       focusstack,     {.i = +1} },
         { MODKEY,                    XKB_KEY_Right,      focusstack,     {.i = -1} },
+        { MODKEY,                    XKB_KEY_Up,         focusstack,     {.i = -1} },
+        { MODKEY,                    XKB_KEY_Down,       focusstack,     {.i = +1} },
         { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Left,       rotate_clients, {.i = +1} },
         { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Right,      rotate_clients, {.i = -1} },
+        { WLR_MODIFIER_ALT,          XKB_KEY_Tab,        view,           {0} },
 
         /* layout */
         { MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
         { MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
         { MODKEY,                    XKB_KEY_Tab,        view,           {0} },
-        { MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
-        { MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
 
         /* monitors */
         { MODKEY,                    XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },
@@ -193,6 +216,11 @@ static const Key keys[] = {
         { 0, XKB_KEY_XF86AudioPrev,         spawn, SHCMD("playerctl previous") },
         { 0, XKB_KEY_XF86AudioPlay,         spawn, SHCMD("playerctl play-pause") },
         { 0, XKB_KEY_XF86AudioPause,        spawn, SHCMD("playerctl play-pause") },
+        { 0, XKB_KEY_F1,                    spawn, SHCMD("killall gammastep || gammastep -O 3500") },
+        { 0, XKB_KEY_F2,                    defaultgaps,    {0} },
+        { 0, XKB_KEY_F3,                    spawn, SHCMD("brightnessctl set 100%+") },
+        { 0, XKB_KEY_F4,                    spawn, SHCMD("cheese") },
+        { 0, XKB_KEY_F10,                   spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle && notify-send -u normal -t 1000 'Microphone' 'toggled'") },
 
         /* gaps */
         { MODKEY|WLR_MODIFIER_LOGO,  XKB_KEY_equal,      incgaps,       {.i = +1 } },

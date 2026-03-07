@@ -534,8 +534,8 @@ applyrules(Client *c)
 					struct wlr_box b = respect_monitor_reserved_area ? mon->w : mon->m;
 					newwidth  = (int)round((r->w >= 0) ? (r->w <= 1 ? b.width  * r->w       : r->w)       : c->geom.width);
 					newheight = (int)round((r->h >= 0) ? (r->h <= 1 ? b.height * r->h       : r->h)       : c->geom.height);
-					newx      = (int)round((r->x >= 0) ? (r->x <= 1 ? b.width  * r->x + b.x : r->x + b.x) : c->geom.x);
-					newy      = (int)round((r->y >= 0) ? (r->y <= 1 ? b.height * r->y + b.y : r->y + b.y) : c->geom.y);
+					newx      = (int)round((r->x >= 0) ? (r->x <= 1 ? b.width  * r->x + b.x : r->x + b.x) : b.x + (b.width - newwidth) / 2);
+					newy      = (int)round((r->y >= 0) ? (r->y <= 1 ? b.height * r->y + b.y : r->y + b.y) : b.y + (b.height - newheight) / 2);
 					apply_resize = 1;
 				}
 			}
@@ -544,6 +544,16 @@ applyrules(Client *c)
 
 	c->isfloating |= client_is_float_type(c);
 	setmon(c, mon, newtags);
+
+	if (!apply_resize) {
+		struct wlr_box b = respect_monitor_reserved_area ? mon->w : mon->m;
+		newwidth = c->geom.width;
+		newheight = c->geom.height;
+		newx = b.x + (b.width - newwidth) / 2;
+		newy = b.y + (b.height - newheight) / 2;
+		apply_resize = 1;
+	}
+
 	if (apply_resize) {
 		resize(c, (struct wlr_box){
 				.x = newx,
@@ -2650,6 +2660,16 @@ setsel(struct wl_listener *listener, void *data)
 	wlr_seat_set_selection(seat, event->source, event->serial);
 }
 
+static void
+autostart(void)
+{
+	if (fork() == 0) {
+		setsid();
+		execl("/bin/sh", "/bin/sh", "/home/cyber-green/dwl/autostart.sh", (char *)NULL);
+		_exit(0);
+	}
+}
+
 void
 setup(void)
 {
@@ -2872,6 +2892,7 @@ setup(void)
 		fprintf(stderr, "failed to setup XWayland X server, continuing without it\n");
 	}
 #endif
+	autostart();
 }
 
 void
