@@ -208,10 +208,10 @@ static const Key keys[] = {
 
         /* media keys */
         { 0, XKB_KEY_XF86AudioMute,         spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle") },
-        { 0, XKB_KEY_XF86AudioLowerVolume,  spawn, SHCMD("swayosd-client --output-volume lower") },
-        { 0, XKB_KEY_XF86AudioRaiseVolume,  spawn, SHCMD("swayosd-client --output-volume raise") },
-        { 0, XKB_KEY_XF86MonBrightnessUp,   spawn, SHCMD("swayosd-client --brightness +5") },
-        { 0, XKB_KEY_XF86MonBrightnessDown, spawn, SHCMD("swayosd-client --brightness -5") },
+        { 0, XKB_KEY_F8,                    spawn, SHCMD("swayosd-client --output-volume lower") },
+        { 0, XKB_KEY_F9,                    spawn, SHCMD("swayosd-client --output-volume raise") },
+        { 0, XKB_KEY_F6,                    spawn, SHCMD("swayosd-client --brightness +5") },
+        { 0, XKB_KEY_F5,                    spawn, SHCMD("swayosd-client --brightness -5") },
         { 0, XKB_KEY_XF86AudioNext,         spawn, SHCMD("playerctl next") },
         { 0, XKB_KEY_XF86AudioPrev,         spawn, SHCMD("playerctl previous") },
         { 0, XKB_KEY_XF86AudioPlay,         spawn, SHCMD("playerctl play-pause") },
