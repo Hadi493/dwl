@@ -9,11 +9,25 @@ waybar &
 # Start clipboard manager
 wl-paste --type text --watch cliphist store &
 wl-paste --type image --watch cliphist store &
+~/.config/hypr/scripts/clipboard_sync.sh &
 
-# Start wallpaper daemon (assuming swww, as it's common in Hyprland)
+# Start wallpaper daemon
 swww-daemon &
-# You can set your wallpaper here, for example:
-# swww img /path/to/your/wallpaper.jpg &
+~/.config/hypr/scripts/restore_wallpaper.sh &
 
-# Start other background processes
-# nm-applet --indicator &
+# Start swayosd-server
+swayosd-server &
+
+# Start hypridle
+~/.config/hypr/scripts/run_hypridle.sh &
+
+# Theme recovery
+wal -R &
+
+# Other Hyprland services
+walker --gapplication-service &
+elephant &
+~/.config/hypr/scripts/xdg_launch.sh &
+
+# Environment sync
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
