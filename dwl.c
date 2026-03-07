@@ -1114,6 +1114,13 @@ createmon(struct wl_listener *listener, void *data)
 	wlr_output_state_init(&state);
 	/* Initialize monitor state using configured rules */
 	m->tagset[0] = m->tagset[1] = 1;
+	m->m.x = m->m.y = -1;
+	m->mfact = 0.55f;
+	m->nmaster = 1;
+	m->lt[0] = &layouts[0];
+	m->lt[1] = &layouts[LENGTH(layouts) > 1];
+	strncpy(m->ltsymbol, m->lt[m->sellt]->symbol, LENGTH(m->ltsymbol));
+
 	for (r = monrules; r < END(monrules); r++) {
 		if (!r->name || strstr(wlr_output->name, r->name)) {
 			m->m.x = r->x;
