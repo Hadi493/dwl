@@ -41,9 +41,9 @@ static const Rule rules[] = {
 	/* app_id  title  tags mask  isfloating  alpha unfocus  monitor x y w h*/
 	/* examples: */
 	{ "EXAMPLE",  NULL,       0,       1,      default_opacity_unfocus, -1 }, 
-	{ "foot",     NULL,       0,       0,      0.75,    -1 },
-	{ "foot",    "fzf",       0, 	   1,      1,       -1, 310, 200, 1300, 0.4},
-	{ "foot",    "menu",      0, 	   1,      1,       -1, 710, 300, 500, 0.35},
+	{ "kitty",     NULL,       0,       0,      0.75,    -1 },
+	{ "kitty",    "fzf",       0, 	   1,      1,       -1, 310, 200, 1300, 0.4},
+	{ "kitty",    "menu",      0, 	   1,      1,       -1, 710, 300, 500, 0.35},
 };
 
 /* layout(s) */
@@ -145,6 +145,10 @@ static const Key keys[] = {
 	
 
 	/* core programs */
+	{ MODKEY, XKB_KEY_p, spawn, SHCMD("rofi -show drun") },
+	{ MODKEY, XKB_KEY_v, spawn, SHCMD("cliphist list | rofi -dmenu | cliphist decode | wl-copy") },
+	{ MODKEY, XKB_KEY_n, spawn, SHCMD("swaync-client -t -sw") },
+	{ MODKEY, XKB_KEY_b, spawn, SHCMD("killall -SIGUSR1 waybar") },
 	{ MODKEY, XKB_KEY_w, spawn, {.v = browser} },
 	{ MODKEY, XKB_KEY_Return, spawn, {.v = term} },
 
@@ -154,7 +158,7 @@ static const Key keys[] = {
 
 
 	/* scripts, menus, shell cmd examples */
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_W, spawn, {.v = (const char*[]){ "example", NULL } } },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_W, spawn, SHCMD("find ~/Pictures/Wallpapers/ -type f | rofi -dmenu -i -p \"Wallpaper\" | xargs swww img") },
 	{ MODKEY, XKB_KEY_Insert, spawn, SHCMD("mpc prev") },
 	{ MODKEY, XKB_KEY_Prior, spawn, SHCMD("mpc next") },
 	{ MODKEY, XKB_KEY_Scroll_Lock, spawn, SHCMD("mpc toggle") },
