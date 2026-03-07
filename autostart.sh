@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Log autostart execution
+echo "Autostart script started at $(date)" >> /home/cyber-green/dwl/autostart.log
+
+# Environment sync (FIRST)
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
+
+# Ensure variables are exported for this script's children
+export XDG_CURRENT_DESKTOP=dwl
+# WAYLAND_DISPLAY is inherited from dwl, but we can ensure it's set
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}"
+
 # Start notification daemon
 swaync &
 
@@ -13,7 +24,6 @@ blueman-applet &
 # Start clipboard manager
 wl-paste --type text --watch cliphist store &
 wl-paste --type image --watch cliphist store &
-# ~/.config/hypr/scripts/clipboard_sync.sh & # This might be conflicting or unnecessary if using cliphist
 
 # Start wallpaper daemon
 swww-daemon &
@@ -32,6 +42,3 @@ wal -R &
 walker --gapplication-service &
 elephant &
 ~/.config/hypr/scripts/xdg_launch.sh &
-
-# Environment sync
-dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
