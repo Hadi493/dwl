@@ -180,7 +180,8 @@ static const Key keys[] = {
         { WLR_MODIFIER_SHIFT,        XKB_KEY_Print,      spawn,          SHCMD("hyprshot -m region -o ~/Pictures/screenshots -f $(date +%Y-%m-%d_%H-%M-%S).png") },
         { WLR_MODIFIER_CTRL,         XKB_KEY_Escape,     spawn,          SHCMD("killall waybar || waybar") },
         { MODKEY,                    XKB_KEY_t,          spawn,          SHCMD("cg-timer") },
-        { MODKEY,                    XKB_KEY_z,          spawn,          SHCMD("boomer") },
+        { MODKEY,                    XKB_KEY_z,          zoom,           {0} },
+        { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Z,          spawn,          SHCMD("boomer") },
         { MODKEY,                    XKB_KEY_a,          spawn,          SHCMD("pavucontrol") },
         { WLR_MODIFIER_ALT,          XKB_KEY_c,          spawn,          SHCMD("kitty peaclock") },
 
